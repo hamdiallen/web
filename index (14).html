@@ -1,0 +1,457 @@
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   allen.c
+  </title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://i.imgur.com/OD6taaS.png" rel="icon" type="image/png"/>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <style>
+   body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background: url('https://i.imgur.com/jbdRsvc.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(31, 31, 31, 0.9);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            animation: slideDown 1s ease-out;
+        }
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+        header h1 {
+            margin: 0;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+        nav ul li {
+            margin-left: 20px;
+        }
+        nav ul li a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+        nav ul li a:hover {
+            color: #ffcc00;
+        }
+        .container {
+            padding: 100px 20px 20px;
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 1s ease-out;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .profile {
+            text-align: center;
+            margin-bottom: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .profile img {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            animation: profileAnimation 2s ease-in-out;
+        }
+        .profile h2 {
+            margin-left: 20px;
+            font-size: 32px;
+            animation: fadeIn 2s ease-in-out;
+        }
+        @keyframes profileAnimation {
+            0% {
+                transform: scale(0);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        .about, .social-media, .cv, .projects, .skills, .contact, .experience {
+            margin-bottom: 50px;
+        }
+        .about h2, .social-media h2, .cv h2, .projects h2, .skills h2, .contact h2, .experience h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ffffff;
+            padding-bottom: 10px;
+            animation: slideInLeft 1s ease-out;
+        }
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-100%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+        .about p, .projects p, .skills p, .contact p, .experience p {
+            font-size: 18px;
+            line-height: 1.6;
+            animation: slideInRight 1s ease-out;
+        }
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+        .social-media a {
+            color: #ffffff;
+            font-size: 24px;
+            margin: 0 10px;
+            text-decoration: none;
+            transition: transform 0.3s, color 0.3s;
+        }
+        .social-media a:hover {
+            transform: scale(1.2);
+            color: #ffcc00;
+        }
+        .cv a {
+            color: #ffffff;
+            font-size: 18px;
+            text-decoration: none;
+            border: 2px solid #ffffff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s, transform 0.3s;
+        }
+        .cv a:hover {
+            background-color: #ffffff;
+            color: #121212;
+            transform: scale(1.1);
+        }
+        .section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .modal-content {
+            background-color: #1f1f1f;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 800px;
+            border-radius: 10px;
+            transform: scale(0.7);
+            animation: scaleIn 0.5s forwards;
+        }
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.7);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .cv-iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+        }
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffcc00;
+            border-radius: 50%;
+            position: absolute;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease-out;
+        }
+  </style>
+  <script>
+   document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('.section');
+            const options = {
+                threshold: 0.1
+            };
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, options);
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // Modal functionality
+            const modal = document.getElementById("cvModal");
+            const btn = document.getElementById("cvBtn");
+            const span = document.getElementsByClassName("close")[0];
+
+            btn.onclick = function() {
+                modal.style.display = "flex";
+            }
+
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+
+            // Custom cursor functionality
+            const cursor = document.createElement('div');
+            cursor.classList.add('cursor');
+            document.body.appendChild(cursor);
+
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+            });
+        });
+  </script>
+ </head>
+ <body>
+  <header>
+   <h1>
+    allen.c
+   </h1>
+   <nav>
+    <ul>
+     <li>
+      <a href="#about">
+       About
+      </a>
+     </li>
+     <li>
+      <a href="#skills">
+       Skills
+      </a>
+     </li>
+     <li>
+      <a href="#experience">
+       Experience
+      </a>
+     </li>
+     <li>
+      <a href="#projects">
+       Projects
+      </a>
+     </li>
+     <li>
+      <a href="#contact">
+       Contact
+      </a>
+     </li>
+    </ul>
+   </nav>
+  </header>
+  <div class="container">
+   <div class="profile section">
+    <img alt="Profile picture of Hamdi Yavuz with a friendly smile, wearing a casual outfit, and standing against a blurred background." height="150" src="https://avatars.githubusercontent.com/hamdiallen" width="150"/>
+    <h2>
+     hamdiallen
+    </h2>
+   </div>
+   <div class="about section" id="about">
+    <h2>
+     About Me
+    </h2>
+    <p>
+     Hello, my name is Hamdi Yavuz, I am studying software engineering at Eastern Mediterranean University. My interests are AI design, project management, and team leadership. I have experience in languages such as C, Python, and OpenCV. I have developed nearly 10 projects and published them publicly on my GitHub page. I have attended online courses and seminars from quality places such as Harvard, Microsoft, and Google, and made valuable contacts. I give importance to originality in the projects I do. I created this site to improve myself.
+    </p>
+   </div>
+   <div class="skills section" id="skills">
+    <h2>
+     Skills
+    </h2>
+    <p>
+     I have expertise in the following areas:
+    </p>
+    <ul>
+     <li>
+      C
+     </li>
+     <li>
+      Python
+     </li>
+     <li>
+      OpenCV
+     </li>
+     <li>
+      AI Design
+     </li>
+     <li>
+      Project Management
+     </li>
+     <li>
+      Team Leadership
+     </li>
+    </ul>
+   </div>
+   <div class="experience section" id="experience">
+    <h2>
+     Experience
+    </h2>
+    <p>
+     I have worked at various companies and on numerous projects, gaining valuable experience in the field of software engineering.
+    </p>
+    <ul>
+     <li>
+      <strong>
+       Company 1:
+      </strong>
+      Role and description of work.
+     </li>
+     <li>
+      <strong>
+       Company 2:
+      </strong>
+      Role and description of work.
+     </li>
+     <li>
+      <strong>
+       Company 3:
+      </strong>
+      Role and description of work.
+     </li>
+    </ul>
+   </div>
+   <div class="projects section" id="projects">
+    <h2>
+     Projects
+    </h2>
+    <p>
+     Here are some of the projects I have worked on:
+    </p>
+    <ul>
+     <li>
+      <strong>
+       Project 1:
+      </strong>
+      Description of Project 1.
+     </li>
+     <li>
+      <strong>
+       Project 2:
+      </strong>
+      Description of Project 2.
+     </li>
+     <li>
+      <strong>
+       Project 3:
+      </strong>
+      Description of Project 3.
+     </li>
+    </ul>
+   </div>
+   <div class="contact section" id="contact">
+    <h2>
+     Contact Me
+    </h2>
+    <p>
+     Feel free to reach out to me via email at allennn1000@gmail.com or connect with me on social media.
+    </p>
+    <div class="social-media">
+     <a href="https://www.linkedin.com/in/hamdi-yavuz-23aa45292/" target="_blank">
+      <i class="fab fa-linkedin">
+      </i>
+     </a>
+     <a href="https://github.com/hamdiallen" target="_blank">
+      <i class="fab fa-github">
+      </i>
+     </a>
+    </div>
+   </div>
+  </div>
+  <div class="modal" id="cvModal">
+   <div class="modal-content">
+    <span class="close">
+     &times;
+    </span>
+    <iframe class="cv-iframe" src="path/to/your/cv.pdf">
+    </iframe>
+   </div>
+  </div>
+ </body>
+</html>
